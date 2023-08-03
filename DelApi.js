@@ -22,6 +22,7 @@ function handleDelRequest(req, res,existingArray) {
       //   })
       // });s
       // existingArr = existingArray.filter(item => item.data !== elementToRemove); 
+      this.existingArray = existingArray;
       res.end(JSON.stringify(existingArray, null, 2));
     // } catch (error) {
     //   res.writeHead(400, { 'Content-Type': 'text/plain' });
