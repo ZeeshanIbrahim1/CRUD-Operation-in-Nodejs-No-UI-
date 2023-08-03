@@ -1,12 +1,34 @@
-function handleDelRequest(req, res) {
-  const parsedUrl = new url.URL(req.url, `http://${req.headers.host}`);
-  const queryParams = parsedUrl.searchParams;
-  console.log(queryParams);
-  // Get a specific query parameter by name
-  const name = queryParams.get('name');
-  const age = queryParams.get('age');
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ message: "Hello, GET API!" }));
+function handleDelRequest(req, res,existingArray) {
+  let body='';
+  req.on('data', (chunk) => {
+    body += chunk;
+  });
+  console.log("body in Del request:", body)
+
+  req.on('end', () => {
+    // try {
+      const elementToRemove = JSON.parse(body);
+      console.log(elementToRemove);
+      existingArray = existingArray.filter(item => {
+        return Object.keys(elementToRemove).every(key => {
+          return item[key] !== elementToRemove[key];
+        });
+      });
+      // let newgg = Object.keys(elementToRemove).forEach(element => {
+      //   existingArray.forEach(item =>{
+      //     if(element.data === item.data){
+            
+      //     }
+      //   })
+      // });s
+      // existingArr = existingArray.filter(item => item.data !== elementToRemove); 
+      res.end(JSON.stringify(existingArray, null, 2));
+    // } catch (error) {
+    //   res.writeHead(400, { 'Content-Type': 'text/plain' });
+    //   res.end('Invalid JSON data');
+    // }
   }
+  );  
+}
   
 module.exports = handleDelRequest;

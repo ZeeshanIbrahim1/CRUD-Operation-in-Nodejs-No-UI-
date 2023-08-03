@@ -5,16 +5,16 @@ function handlePostRequest(req, res,existingArray) {
     });
   
     req.on('end', () => {
-      // try {
+      try {
         const data = JSON.parse(body);
         existingArray.push(data); // Add the new data to the existing array
         res.writeHead(201, { 'Content-Type': 'text/plain' });
         res.end(JSON.stringify(existingArray, null, 2));
-      // } catch (error) {
-      //   res.writeHead(400, { 'Content-Type': 'text/plain' });
-      //   res.end('Invalid JSON data');
+      } catch (error) {
+        res.writeHead(400, { 'Content-Type': 'text/plain' });
+        res.end('Invalid JSON data');
       }
-    // }
+    }
     );
   }
   

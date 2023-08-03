@@ -1,15 +1,9 @@
 const http = require('http');
 const handleGetRequest = require('./getApi');
 const handlePostRequest = require('./postApi');
-const handleDeleteRequest = require('./DelApi');
+const handleDelRequest = require('./DelApi');
 const handlePutRequest = require('./putApi');
-
-let array = [
-    {id:1,name:"Google",age:20},
-    {id:2,name:"Meta",age:12},
-    {id:3,name:"OpenAI",age:20},
-    {id:4,name:"X",age:12},
-];
+const array = require('./data')
 
 const server = http.createServer((req, res) => {
 
@@ -22,9 +16,9 @@ const server = http.createServer((req, res) => {
   } else if (req.method === 'POST' ) {
     handlePostRequest(req, res, array);
   } else if (req.method === 'DELETE' ) {
-    handleDeleteRequest(req, res);
+    handleDelRequest(req, res, array);
   } else if (req.method === 'PUT' ) {
-    handlePutRequest(req, res);
+    handlePutRequest(req, res,array);
   } else {
   }
 });
