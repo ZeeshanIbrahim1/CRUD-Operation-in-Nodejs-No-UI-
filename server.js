@@ -1,4 +1,5 @@
 const http = require('http');
+const { parse } = require('path');
 let array = [
   {"id":1,
    "name" :"ZEON"        
@@ -21,11 +22,9 @@ function handlePostRequest(req, res,array) {
   req.on('end', () => {
     try {
       const data = JSON.parse(body);
-      array.push(data); // Add the new data to the existing array
-      res.writeHead(201, { 'Content-Type': 'text/plain' });
+      array.push(data); 
       res.end(JSON.stringify(array, null, 2));
     } catch (error) {
-      res.writeHead(400, { 'Content-Type': 'text/plain' });
       console.log("error :" ,  error)
       res.end('Invalid JSON data');
     }
@@ -33,22 +32,29 @@ function handlePostRequest(req, res,array) {
   );
 }
 
-function handlePutRequest(req, res,array) {
-  let body = ''
-  req.on("data", (chunk)=>{
+function handlePutRequest(req, res, array) {
+  let body = '';
+  req.on('data', (chunk) => {
     body += chunk;
-  })
-  req.on("end",()=>{
+  });
+
+  req.on('end', () => {
     try {
-      console.log("in try of put method")
-      let parsedString = JSON.parse(body);
-      array = parsedString;
-      res.end(JSON.stringify(array,null,2))
+      const newData = JSON.parse(body);
+      const userToUpdate = array.find((user) => user.id === newData.id);
+      if (userToUpdate) {
+        userToUpdate.name = newData.name;
+        res.end(JSON.stringify(array,null,2));
+      } else {
+        res.end('User not found.');
+      }
     } catch (error) {
-      res.end("Error in PUT method")
+      res.end('Error processing request.');
     }
-  })
+  });
 }
+
+
 
 function handleDelRequest(req, res, array) {
   let body = '';
@@ -61,13 +67,12 @@ function handleDelRequest(req, res, array) {
       const elementToRemove = JSON.parse(body);
       console.log("remove this element:",elementToRemove);
       const newArray = array.filter((item) => {
-        // Here, we compare each object's properties with elementToRemove
         for (key in elementToRemove) {
           if (item[key] === elementToRemove[key]) {
-            return false; // If the properties match, exclude the element from the new array
+            return false;
           }
         }
-        return true; // Include the element in the new array if properties don't match
+        return true;
       });
       array.splice(0, array.length, ...newArray);
       res.end(JSON.stringify(array, null, 2));
