@@ -1,5 +1,4 @@
 const http = require('http');
-const { parse } = require('path');
 let array = [
   {"id":1,
    "name" :"ZEON"        
@@ -43,6 +42,7 @@ function handlePutRequest(req, res, array) {
       const newData = JSON.parse(body);
       const userToUpdate = array.find((user) => user.id === newData.id);
       if (userToUpdate) {
+        console.log("User to update : " , userToUpdate);
         userToUpdate.name = newData.name;
         res.end(JSON.stringify(array,null,2));
       } else {
